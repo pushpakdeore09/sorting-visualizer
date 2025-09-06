@@ -1,10 +1,19 @@
 
 import './App.css'
+import Controls from './components/Controls'
+import { ModeToggle } from './components/mode-toggle'
+import { ThemeProvider } from './components/theme-provider'
 
 function App() {
 
   return (
-    <div className='text-4xl text-red-600'>Hello</div>
+    <ThemeProvider>
+      <div className='p-2 flex justify-between'>
+      <h1 className='text-4xl font-bold mb-4'>Sorting Visualizer</h1>
+      <Controls />
+      <ModeToggle/>
+    </div>
+    </ThemeProvider>
   )
 }
 
