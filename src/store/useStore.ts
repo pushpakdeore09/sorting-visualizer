@@ -15,6 +15,10 @@ interface Store {
   setSwapIndices: (indices: number[]) => void
   pivotIndex: number
   setPivotIndex: (index: number) => void
+  sortedIndices: number[];
+  setSortedIndices: (idx: number[]) => void;
+  minIndex: number,
+  setMinIndex: (i: number) =>void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -31,5 +35,11 @@ export const useStore = create<Store>((set) => ({
   swapIndices: [],
   setSwapIndices: (indices) => set({ swapIndices: indices }),
   pivotIndex: 0,
-  setPivotIndex: (index) => set({pivotIndex: index})
+  setPivotIndex: (index) => set({pivotIndex: index}),
+  sortedIndices: [],
+  setSortedIndices: (idx) => set({ sortedIndices: idx }),
+  minIndex: -1,
+  setMinIndex: (i: number) => set({ minIndex: i }),
+  
+  
 }));

@@ -9,7 +9,7 @@ import { algorithmInfo, type AlgorithmKey } from "../core/algorithmInfo.tsx";
 import { useStore } from "@/store/useStore.ts";
 import { Button } from "./ui/button.tsx";
 import { Slider } from "./ui/slider.tsx";
-import { bubbleSort, insertionSort } from "@/core/sorting.ts";
+import { bubbleSort, insertionSort, selectionSort } from "@/core/sorting.ts";
 
 export default function Controls() {
   const {
@@ -33,7 +33,7 @@ export default function Controls() {
   const shuffle = () => {
     const arr = Array.from(
       { length: 20 },
-      () => Math.floor(Math.random() * 50) + 5
+      () => Math.floor(Math.random() * 100) + 5
     );
     setArray(arr);
     setStatus("idle");
@@ -47,6 +47,9 @@ export default function Controls() {
         case "insertion":
             await insertionSort();
             break;
+        case "selection":
+          await selectionSort()
+          break;
         default: break;
     }
   };
@@ -93,11 +96,12 @@ export default function Controls() {
           variant="secondary"
           onClick={shuffle}
           disabled={status === "sorting"}
+          className='h-10 w-35 border-4 cursor-pointer text-lg'
         >
           Shuffle
         </Button>
-        <Button onClick={start} disabled={status === "sorting"}>
-          {status === "sorting" ? "Sorting..." : "Start"}
+        <Button onClick={start} disabled={status === "sorting"} className='h-10 w-35 cursor-pointer text-lg'>
+          {status === "sorting" ? "Sorting..." : "Sort"}
         </Button>
       </div>
     </>
