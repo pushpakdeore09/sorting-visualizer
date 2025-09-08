@@ -46,7 +46,7 @@ Each algorithm comes with a detailed description and its complexities:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/sorting-visualizer.git
+git clone https://github.com/pushpakdeore09/sorting-visualizer.git
 cd sorting-visualizer
 npm install
 npm run dev
