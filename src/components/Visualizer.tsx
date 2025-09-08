@@ -52,7 +52,7 @@ const Visualizer = forwardRef<HTMLDivElement, VisualizerProps>((props, ref) => {
               >
                 <motion.div
                   animate={{
-                    height: val * 3.2,
+                    height: val * 3,
                     backgroundColor: isSwapping
                       ? "#22c55e"
                       : minIndex === idx
@@ -65,7 +65,7 @@ const Visualizer = forwardRef<HTMLDivElement, VisualizerProps>((props, ref) => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   className="rounded-t-md flex items-end justify-center text-white font-medium"
-                  style={{ width: `${barWidth}px` }}
+                  style={{ width: `${barWidth}px`, marginTop: 60}}
                 />
                 <span className="mt-2 text-xs sm:text-sm">{val}</span>
               </motion.div>
@@ -74,9 +74,8 @@ const Visualizer = forwardRef<HTMLDivElement, VisualizerProps>((props, ref) => {
         </AnimatePresence>
       </div>
 
-      {/* Render AlgorithmInfoPanel only if array exists */}
       {array.length > 0 && (
-        <div ref={ref} className="w-full max-w-xl mt-6">
+        <div ref={ref} className="w-full max-w-xl mt-8">
           <AlgorithmInfoPanel />
         </div>
       )}

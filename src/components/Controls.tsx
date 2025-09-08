@@ -13,6 +13,8 @@ import { bubbleSort, insertionSort, mergeSort, quickSort, selectionSort } from "
 
 export default function Controls() {
   const {
+    arraySize,
+    setArraySize,
     setArray,
     algorithm,
     setAlgorithm,
@@ -21,6 +23,8 @@ export default function Controls() {
     status,
     setStatus,
   } = useStore() as {
+    arraySize: number;
+    setArraySize: (arraySize: number) => void;
     setArray: (array: number[]) => void;
     algorithm: AlgorithmKey;
     setAlgorithm: (algorithm: AlgorithmKey) => void;
@@ -30,8 +34,8 @@ export default function Controls() {
     setStatus: (status: string) => void;
   };
 
-  const shuffle = () => {
-    const arr = Array.from({ length: 20 }, () => Math.floor(Math.random() * 100) + 5);
+  const shuffle = (size: number) => {
+    const arr = Array.from({ length: size }, () => Math.floor(Math.random() * 100) + 5);
     setArray(arr);
     setStatus("idle");
   };
@@ -61,9 +65,7 @@ export default function Controls() {
 
   return (
     <>
-      {/* Main Controls container */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 w-full">
-        {/* Algorithm Selector */}
         <Select
           value={algorithm}
           onValueChange={(val) => setAlgorithm(val as AlgorithmKey)}
@@ -84,7 +86,27 @@ export default function Controls() {
           </SelectContent>
         </Select>
 
-        {/* Speed Slider */}
+        <Select
+          value={arraySize.toString()}
+          onValueChange={(val) => {
+            const size = parseInt(val);
+            setArraySize(size);
+            shuffle(size);
+          }}
+          disabled={status === "sorting"}
+        >
+          <SelectTrigger className="w-full sm:w-[120px] text-sm sm:text-base">
+            <SelectValue placeholder="Array Size" />
+          </SelectTrigger>
+          <SelectContent>
+            {[5, 10, 15, 20, 25].map((size) => (
+              <SelectItem key={size} value={size.toString()}>
+                {size}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <span className="text-sm sm:text-base font-medium">Speed</span>
           <Slider
@@ -100,11 +122,10 @@ export default function Controls() {
         </div>
       </div>
 
-      {/* Buttons fixed at bottom */}
       <div className="fixed bottom-0 left-0 w-full border-t bg-background px-4 py-3 flex flex-col sm:flex-row justify-center sm:justify-center gap-2 sm:gap-4">
         <Button
           variant="secondary"
-          onClick={shuffle}
+          onClick={() => shuffle(arraySize)}
           disabled={status === "sorting"}
           className="h-10 w-full sm:w-40 text-sm sm:text-lg"
         >

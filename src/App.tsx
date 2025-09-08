@@ -6,7 +6,6 @@ import Controls from "./components/Controls";
 import { Separator } from "./components/ui/separator";
 import { algorithmInfo, type AlgorithmKey } from "./core/algorithmInfo";
 import { useStore } from "./store/useStore";
-import AlgorithmInfoPanel from "./core/algorithmInfoPanel";
 
 function App() {
   const { algorithm } = useStore() as { algorithm: AlgorithmKey };
@@ -45,10 +44,8 @@ function App() {
         </div>
 
         <div className="flex-1 pb-32">
-          <Visualizer />
+          <Visualizer ref={infoRef} />
         </div>
-
-        
       </div>
     </ThemeProvider>
   );

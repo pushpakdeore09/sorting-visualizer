@@ -3,6 +3,8 @@ import { create } from "zustand";
 interface Store {
   array: number[];
   setArray: (arr: number[]) => void;
+  arraySize: number;
+  setArraySize: (size: number) => void;
   algorithm: string;
   setAlgorithm: (algo: string) => void;
   speed: number;
@@ -24,6 +26,8 @@ interface Store {
 export const useStore = create<Store>((set) => ({
   array: [],
   setArray: (arr) => set({ array: arr }),
+  arraySize: 10,
+  setArraySize: (size) => set({arraySize: size}),
   algorithm: "bubble",
   setAlgorithm: (algo) => set({ algorithm: algo }),
   speed: 1000,
