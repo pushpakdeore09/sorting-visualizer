@@ -1,76 +1,88 @@
+import { forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/store/useStore";
+import AlgorithmInfoPanel from "@/core/algorithmInfoPanel";
 
-export default function Visualizer() {
-  const { array, compareIndices, swapIndices } = useStore();
+interface VisualizerProps {}
+
+const Visualizer = forwardRef<HTMLDivElement, VisualizerProps>((props, ref) => {
+  const { array, compareIndices, swapIndices, minIndex, pivotIndex } =
+    useStore();
 
   if (!array || array.length === 0)
     return (
-      <div className="flex items-center justify-center h-[60vh] text-muted-foreground">
-        Shuffle to generate an array
+      <div className="flex flex-col items-center justify-center h-[50vh] text-muted-foreground">
+        <div>Shuffle to generate an array</div>
       </div>
     );
 
-  const barWidth = Math.max(40, Math.floor(600 / array.length));
-  const gapSize = Math.max(10, Math.floor(40 / array.length));
+  const baseOffset = 20;
+  const isMobile = window.innerWidth < 640; 
+  const barWidth = isMobile
+    ? Math.max(25, Math.floor(300 / array.length))
+    : Math.max(40, Math.floor(600 / array.length));
+
+  const gapSize = isMobile
+    ? Math.max(8, Math.floor(15 / array.length))
+    : Math.max(10, Math.floor(40 / array.length));
 
   return (
-    <div
-      className="flex items-end justify-center h-[60vh] px-6 overflow-hidden"
-      style={{ gap: `${gapSize}px` }}
-    >
-      <AnimatePresence>
-        {array.map((val, idx) => {
-          const isComparing = compareIndices.includes(idx);
-          const isSwapping = swapIndices.includes(idx);
+    <div className="flex flex-col items-center pb-32 w-full">
+      <div
+        className="flex items-end justify-center px-2"
+        style={{ gap: `${gapSize}px` }}
+      >
+        <AnimatePresence>
+          {array.map((val, idx) => {
+            const isComparing = compareIndices.includes(idx);
+            const isSwapping = swapIndices.includes(idx);
+            const isPivot = pivotIndex >= 0 && pivotIndex === idx;
+            const y = (isSwapping || isComparing ? -60 : 0) + baseOffset;
 
-          let xOffset = 0;
-          let yOffset = 0;
-
-          if (isSwapping && swapIndices.length === 2) {
-            yOffset = -50; // lift bars
-            // small left/right offset for visual separation while lifted
-            xOffset =
-              idx === swapIndices[0] ? 10 : idx === swapIndices[1] ? -10 : 0;
-          }
-
-          return (
-            <motion.div
-              key={`${val}-${idx}`}
-              layout
-              animate={{
-                y: yOffset,
-                x: xOffset,
-                scale: isSwapping ? 1.05 : 1,
-                zIndex: isSwapping ? 10 : 1,
-              }}
-              transition={{
-                y: { type: "spring", stiffness: 200, damping: 18 },
-                x: { type: "spring", stiffness: 200, damping: 18 },
-                scale: { type: "spring", stiffness: 200, damping: 15 },
-              }}
-              className="flex flex-col items-center"
-            >
+            return (
               <motion.div
-                layout
+                key={idx}
                 animate={{
-                  height: val * 3.2,
-                  backgroundColor: isSwapping
-                    ? "#22c55e"
-                    : isComparing
-                    ? "#ef4444"
-                    : "#3b82f6",
+                  y,
+                  scale: isSwapping ? 1.05 : 1,
+                  zIndex: y !== 0 ? 10 : 1,
                 }}
-                transition={{ type: "spring", stiffness: 150, damping: 18 }}
-                className="rounded-t-md flex items-end justify-center text-white font-medium"
-                style={{ width: `${barWidth}px` }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="flex flex-col items-center"
               >
-                <span className="mb-0.5 text-md">{val}</span>
+                <motion.div
+                  animate={{
+                    height: val * 3.2,
+                    backgroundColor: isSwapping
+                      ? "#22c55e"
+                      : minIndex === idx
+                      ? "#facc15"
+                      : isComparing
+                      ? "#ef4444"
+                      : isPivot
+                      ? "#eab308"
+                      : "#3b82f6",
+                  }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="rounded-t-md flex items-end justify-center text-white font-medium"
+                  style={{ width: `${barWidth}px` }}
+                />
+                <span className="mt-2 text-xs sm:text-sm">{val}</span>
               </motion.div>
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
+            );
+          })}
+        </AnimatePresence>
+      </div>
+
+      {/* Render AlgorithmInfoPanel only if array exists */}
+      {array.length > 0 && (
+        <div ref={ref} className="w-full max-w-xl mt-6">
+          <AlgorithmInfoPanel />
+        </div>
+      )}
     </div>
   );
-}
+});
+
+
+export default Visualizer;

@@ -9,7 +9,7 @@ import { algorithmInfo, type AlgorithmKey } from "../core/algorithmInfo.tsx";
 import { useStore } from "@/store/useStore.ts";
 import { Button } from "./ui/button.tsx";
 import { Slider } from "./ui/slider.tsx";
-import { bubbleSort, insertionSort, selectionSort } from "@/core/sorting.ts";
+import { bubbleSort, insertionSort, mergeSort, quickSort, selectionSort } from "@/core/sorting.ts";
 
 export default function Controls() {
   const {
@@ -31,76 +31,90 @@ export default function Controls() {
   };
 
   const shuffle = () => {
-    const arr = Array.from(
-      { length: 20 },
-      () => Math.floor(Math.random() * 100) + 5
-    );
+    const arr = Array.from({ length: 20 }, () => Math.floor(Math.random() * 100) + 5);
     setArray(arr);
     setStatus("idle");
   };
+
   const start = async () => {
-    if(status === 'sorting') return
-    switch(algorithm){
-        case "bubble":
-            await bubbleSort();
-            break;
-        case "insertion":
-            await insertionSort();
-            break;
-        case "selection":
-          await selectionSort()
-          break;
-        default: break;
+    if (status === "sorting") return;
+    switch (algorithm) {
+      case "bubble":
+        await bubbleSort();
+        break;
+      case "insertion":
+        await insertionSort();
+        break;
+      case "selection":
+        await selectionSort();
+        break;
+      case "quick":
+        await quickSort();
+        break;
+      case "merge":
+        await mergeSort();
+        break;
+      default:
+        break;
     }
   };
+
   return (
     <>
-      <div className="flex items-center gap-6">
+      {/* Main Controls container */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 w-full">
+        {/* Algorithm Selector */}
         <Select
           value={algorithm}
           onValueChange={(val) => setAlgorithm(val as AlgorithmKey)}
-          disabled={status === 'sorting'}
+          disabled={status === "sorting"}
         >
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-full sm:w-[200px] text-sm sm:text-base">
             <SelectValue placeholder="Select Algorithm" />
           </SelectTrigger>
           <SelectContent>
             {Object.keys(algorithmInfo).map((key) => {
-              const algoKey = key as AlgorithmKey
+              const algoKey = key as AlgorithmKey;
               return (
                 <SelectItem key={algoKey} value={algoKey}>
                   {algorithmInfo[algoKey].name}
                 </SelectItem>
-              )
+              );
             })}
           </SelectContent>
         </Select>
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium">Speed</span>
+        {/* Speed Slider */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <span className="text-sm sm:text-base font-medium">Speed</span>
           <Slider
             value={[speed]}
             min={50}
             max={2000}
             step={50}
             onValueChange={(val) => setSpeed(val[0])}
-            className="w-[180px]"
-            
+            className="w-full sm:w-[180px]"
+            disabled={status === "sorting"}
           />
-          <span className="text-sm text-muted-foreground">{speed} ms</span>
+          <span className="text-sm sm:text-base text-muted-foreground">{speed} ms</span>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full border-t bg-background px-6 py-4 flex justify-center gap-4">
+      {/* Buttons fixed at bottom */}
+      <div className="fixed bottom-0 left-0 w-full border-t bg-background px-4 py-3 flex flex-col sm:flex-row justify-center sm:justify-center gap-2 sm:gap-4">
         <Button
           variant="secondary"
           onClick={shuffle}
           disabled={status === "sorting"}
-          className='h-10 w-35 border-4 cursor-pointer text-lg'
+          className="h-10 w-full sm:w-40 text-sm sm:text-lg"
         >
           Shuffle
         </Button>
-        <Button onClick={start} disabled={status === "sorting"} className='h-10 w-35 cursor-pointer text-lg'>
+        <Button
+          onClick={start}
+          disabled={status === "sorting"}
+          className="h-10 w-full sm:w-40 text-sm sm:text-lg"
+        >
           {status === "sorting" ? "Sorting..." : "Sort"}
         </Button>
       </div>

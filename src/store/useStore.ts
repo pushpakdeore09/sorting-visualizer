@@ -26,7 +26,7 @@ export const useStore = create<Store>((set) => ({
   setArray: (arr) => set({ array: arr }),
   algorithm: "bubble",
   setAlgorithm: (algo) => set({ algorithm: algo }),
-  speed: 2000,
+  speed: 1000,
   setSpeed: (val) => set({ speed: val }),
   status: "idle",
   setStatus: (s) => set({ status: s }),
