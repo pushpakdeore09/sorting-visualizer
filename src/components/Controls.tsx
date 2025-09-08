@@ -108,7 +108,7 @@ export default function Controls() {
         </Select>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
-          <span className="text-sm sm:text-base font-medium">Speed</span>
+          <span className="text-sm sm:text-base font-medium">Time</span>
           <Slider
             value={[speed]}
             min={50}
