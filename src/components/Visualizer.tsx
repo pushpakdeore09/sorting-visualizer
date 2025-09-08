@@ -5,7 +5,7 @@ import AlgorithmInfoPanel from "@/core/algorithmInfoPanel";
 
 interface VisualizerProps {}
 
-const Visualizer = forwardRef<HTMLDivElement, VisualizerProps>((props, ref) => {
+const Visualizer = forwardRef<HTMLDivElement, VisualizerProps>((_, ref) => {
   const { array, compareIndices, swapIndices, minIndex, pivotIndex } =
     useStore();
 
